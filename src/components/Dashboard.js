@@ -1,39 +1,29 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import PostList from './PostList';
+import PostDetail from './PostDetail';
+import * as api from '../services/data';
 
 import './../index.css';
-import PostDetail from './PostDetail';
 
-const postsSources = [
-    {
-        "id": 1,
-        "title": "Post 1",
-        "author": "User 1" 
-    }, {
-        "id": 2,
-        "title": "Post 2",
-        "author": "User 2" 
-    }, {
-        "id": 3,
-        "title": "Post 3",
-        "author": "User 3" 
-    }, {
-        "id": 4,
-        "title": "Post 4",
-        "author": "User 4" 
-    }, {
-        "id": 5,
-        "title": "Post 5",
-        "author": "User 5" 
-    }
-];
 
 export default function Dashboard() {
 
     const [title, setTitle] = useState("Random Title");
-    const [posts, setPosts] = useState(postsSources);
+    const [posts, setPosts] = useState([]);
     const [postToEditIndex, setPostToEditIndex] = useState(-1);
     const [postToEdit, setPostToEdit] = useState({});
+    const [dataLoaded, setDataLoaded] = useState(false);
+
+
+    useEffect(() => {
+        api.getPosts().then(result => {
+            setPosts(result.data);
+        }).catch((_) => {
+            setPosts([]);
+        }).then((_) => {
+            setDataLoaded(true);
+        });
+    }, [dataLoaded]);
 
     const updateTitle = (event) => {
         setTitle(event.target.value);
