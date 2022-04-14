@@ -1,82 +1,65 @@
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState } from 'react';
 import PostList from './PostList';
 import PostDetail from './PostDetail';
-import * as api from '../services/data';
 
 import './../index.css';
+import AddPost from './AddPost';
 
 
 export default function Dashboard() {
 
-    const [title, setTitle] = useState("Random Title");
-    const [posts, setPosts] = useState([]);
-    const [postToEditIndex, setPostToEditIndex] = useState(-1);
-    const [postToEdit, setPostToEdit] = useState({});
-    const [dataLoaded, setDataLoaded] = useState(false);
+    const [editPostId, setEditPostId] = useState(-1);
+    const [showAddPost, setShowAddPost] = useState(true);
+    
+    const [refreshPosts, setRefreshPosts] = useState(true);
+    const [refreshPost, setRefreshPost] = useState(false);
 
-
-    useEffect(() => {
-        api.getPosts().then(result => {
-            setPosts(result.data);
-        }).catch((_) => {
-            setPosts([]);
-        }).then((_) => {
-            setDataLoaded(true);
-        });
-    }, [dataLoaded]);
-
-    const updateTitle = (event) => {
-        setTitle(event.target.value);
-    }
-
-    const persistTitle = () => {
-        setPosts([{...posts[0], title}, ...posts.slice(1)]);
-    }
 
     const editPost = (postId) => {
-        const postIndex = posts.findIndex(p => p.id == postId);
-        setPostToEdit(posts[postIndex]);
-        setPostToEditIndex(postIndex);
+        setEditPostId(postId);
     }
 
     const onPostDelete = () => {
-        setPosts([
-            ...posts.slice(0, postToEditIndex),
-            ...posts.slice(postToEditIndex+1)
-        ]);
-        setPostToEditIndex(-1);
+        refreshData(); 
+        setEditPostId(-1);
     }
 
     const onPostUpdate = () => {
-        setPosts(prev => [
-            ...prev.slice(0, postToEditIndex), 
-            postToEdit, 
-            ...prev.slice(postToEditIndex+1)
-        ]);
-        setPostToEditIndex(-1);
+        refreshData(); 
+        setEditPostId(-1);
     }
 
-    const onPostChage = (target, value) => {
-        setPostToEdit(prev => { 
-            return {...prev, [target]: value}
-        });
+    const onAddPostCancel = () => { 
+        // TODO: probably hide new post component 
     }
+
+    const onAddPost = (post) => {
+        refreshData(); 
+    }
+
+    const refreshData = () => {
+        setRefreshPost(!refreshPost);
+        setRefreshPosts(!refreshPosts);
+    }
+
 
     return (
         <Fragment>
-            <PostList posts={posts}  editPost={editPost} />
-            <div className="input">
-                <input value={title} onChange={updateTitle} />
-                <button onClick={persistTitle}>Change Title</button>
+            <PostList refreshData={refreshPosts}  editPost={editPost} />
+            
+            <div className="add_edit">
+                {
+                    editPostId >= 0 && 
+                    <PostDetail 
+                        postId={editPostId}
+                        onPostUpdate={onPostUpdate}
+                        onPostDelete={onPostDelete} />
+                }
+                {
+                    showAddPost == true &&
+                    <AddPost onAdd={onAddPost} onCancel={onAddPostCancel} />
+                }
             </div>
-            {
-                postToEditIndex >= 0 && 
-                <PostDetail 
-                    post={postToEdit} 
-                    onPostChange={onPostChage} 
-                    onPostUpdate={onPostUpdate}
-                    onPostDelete={onPostDelete} />
-            }
         </Fragment>
     )
 }

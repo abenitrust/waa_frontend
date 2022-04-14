@@ -22,10 +22,12 @@ code {
 
 .dashboard {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .post_list {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .input {
@@ -49,6 +51,7 @@ code {
   margin: 1em;
   background-color: rgb(61, 112, 208);
   color: aliceblue;
+  width: 10vw;
 }
 
 .f_input {
@@ -60,4 +63,14 @@ code {
 
 .edit_post button {
   margin-right: 1em;
+}
+
+.edit_post {
+  margin: 1em;
+  padding: 1em;
+}
+
+.add_edit {
+  display: flex;
+  justify-content: space-between;
 }
