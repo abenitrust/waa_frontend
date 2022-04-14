@@ -6,10 +6,6 @@ export default function PostList(props) {
 
     const [posts, setPosts] = useState([]);
 
-    const onEditPost = (postId) => {
-        props.editPost(postId);
-    }
-
     useEffect(() => {
         api.getPosts().then(result => {
             setPosts(result.data);
@@ -24,7 +20,6 @@ export default function PostList(props) {
                 posts.map(post => { 
                     return <Post key={post.id} 
                                  detail={post} 
-                                 onEditPost={onEditPost} 
                                  />
                 })
             }

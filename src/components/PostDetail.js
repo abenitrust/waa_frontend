@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { PostContext } from "../context/PostContext";
 import Comment from "./Comment";
 import * as api from '../services/data';
 
 export default function PostDetail(props) {
 
     const doNothing = (e) => e.preventDefault();
+    const { postId } = useContext(PostContext);
 
-    const emptyPost = {id: props.postId, title: '', author: '', comments: []};
+    const emptyPost = {id: postId, title: '', author: '', comments: []};
 
     const [post, setPost] = useState(emptyPost);
+
 
     const onUpdate = (target, event) => {
         setPost(prev => { 
@@ -33,12 +36,12 @@ export default function PostDetail(props) {
     }
 
     useEffect(() => {
-        api.getPostById(props.postId).then(result => {
+        api.getPostById(postId).then(result => {
             setPost(result.data);
         }).catch( err => {
             console.log(err);
         });
-    }, [props.postId])
+    }, [postId])
 
     return(
         <div className="edit_post">

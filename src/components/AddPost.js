@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import * as api from '../services/data';
 
 export default function AddPost(props) {
@@ -13,11 +13,13 @@ export default function AddPost(props) {
         });
     }
     
+    const form = useRef(null);
+
     const doNothing = (e) => {
         e.preventDefault();
     }
 
-    const onAddPost = () => {
+    const onSubmit = () => {
         // TODO: currently user ID is hardcoded, until the time login
         // is properly set.
         api.savePost({...newPost, userId: 4}).then((_) => {
@@ -25,6 +27,10 @@ export default function AddPost(props) {
             setNewPost(emtpyPost);
         })
         .catch(err => console.log(err));
+    }
+    
+    const onAddPost = () => {
+        form.current.submit();
     }
 
     const onCancel = () => {
@@ -35,7 +41,7 @@ export default function AddPost(props) {
     return(
         <div className="edit_post">
             <h3> Add New Post</h3>
-            <form onSubmit={e => doNothing(e)}>
+            <form ref={form} onSubmit={onSubmit}>
                 <div className="f_input">
                     <label htmlFor ="title" >Tilte:</label>  
                     <input id="title"  value={newPost.title} onChange={e => onChange('title', e)} />
@@ -44,7 +50,7 @@ export default function AddPost(props) {
                     <label htmlFor ="author">Author:</label>
                     <input id="author" value={newPost.author} onChange={e => onChange('author', e)} />
                 </div>
-                <button onClick={onAddPost} >Add </button>
+                <button onClick={onAddPost}>Add </button>
                 <button onClick={onCancel}>Cancel</button>
             </form>
         </div>

@@ -1,23 +1,20 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import PostList from './PostList';
 import PostDetail from './PostDetail';
+import AddPost from './AddPost';
+import { PostContext } from '../context/PostContext';
 
 import './../index.css';
-import AddPost from './AddPost';
+
 
 
 export default function Dashboard() {
 
+    const [showAddPost] = useState(true);
     const [editPostId, setEditPostId] = useState(-1);
-    const [showAddPost, setShowAddPost] = useState(true);
-    
     const [refreshPosts, setRefreshPosts] = useState(true);
     const [refreshPost, setRefreshPost] = useState(false);
 
-
-    const editPost = (postId) => {
-        setEditPostId(postId);
-    }
 
     const onPostDelete = () => {
         refreshData(); 
@@ -44,14 +41,13 @@ export default function Dashboard() {
 
 
     return (
-        <Fragment>
-            <PostList refreshData={refreshPosts}  editPost={editPost} />
+        <PostContext.Provider value={ {postId: editPostId, updatePostId: (value) => setEditPostId(value)} }>
+            <PostList refreshData={refreshPosts} />
             
             <div className="add_edit">
                 {
                     editPostId >= 0 && 
                     <PostDetail 
-                        postId={editPostId}
                         onPostUpdate={onPostUpdate}
                         onPostDelete={onPostDelete} />
                 }
@@ -60,6 +56,6 @@ export default function Dashboard() {
                     <AddPost onAdd={onAddPost} onCancel={onAddPostCancel} />
                 }
             </div>
-        </Fragment>
+        </PostContext.Provider>
     )
 }
