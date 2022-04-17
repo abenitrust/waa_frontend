@@ -1,10 +1,17 @@
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+
+import AppRoutes from './routes/routes';
+
 import './index.css';
-import Dashboard from './components/Dashboard';
 
 
 const root = createRoot(document.getElementById('root'));
 
-root.render(<Dashboard />);
+root.render(
+    <BrowserRouter>
+       {AppRoutes}
+    </BrowserRouter>
+);
 
 

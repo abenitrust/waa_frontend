@@ -1,9 +1,12 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import * as api from '../services/data';
 
 export default function AddPost(props) {
 
     const emtpyPost = {title: '', author: ''};
+    const navigate = useNavigate();
 
     const [newPost, setNewPost] = useState(emtpyPost);
     
@@ -13,35 +16,29 @@ export default function AddPost(props) {
         });
     }
     
-    const form = useRef(null);
-
     const doNothing = (e) => {
         e.preventDefault();
     }
 
-    const onSubmit = () => {
-        // TODO: currently user ID is hardcoded, until the time login
-        // is properly set.
-        api.savePost({...newPost, userId: 4}).then((_) => {
-            props.onAdd(newPost);
-            setNewPost(emtpyPost);
-        })
-        .catch(err => console.log(err));
+    const onSubmit = (e) => {
+        e.preventDefault();
     }
     
     const onAddPost = () => {
-        form.current.submit();
+        api.savePost({...newPost, userId: 4}).then((_) => {
+            
+        })
+        .catch(err => console.log(err));
     }
 
     const onCancel = () => {
-        setNewPost(emtpyPost);
-        props.onCancel();
+        navigate('/posts');
     }
 
     return(
         <div className="edit_post">
             <h3> Add New Post</h3>
-            <form ref={form} onSubmit={onSubmit}>
+            <form onSubmit={onSubmit}>
                 <div className="f_input">
                     <label htmlFor ="title" >Tilte:</label>  
                     <input id="title"  value={newPost.title} onChange={e => onChange('title', e)} />

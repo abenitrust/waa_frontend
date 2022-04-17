@@ -1,18 +1,20 @@
 import { useEffect, useState, useContext } from "react";
-import { PostContext } from "../context/PostContext";
+import { useParams, useNavigate } from "react-router-dom";
+
 import Comment from "./Comment";
 import * as api from '../services/data';
 
 export default function PostDetail(props) {
 
-    const doNothing = (e) => e.preventDefault();
-    const { postId } = useContext(PostContext);
-
-    const emptyPost = {id: postId, title: '', author: '', comments: []};
-
+    const params = useParams();
+    const navigate = useNavigate();
+    
+    const emptyPost = {id: params.id, title: '', author: '', comments: []};
+    
     const [post, setPost] = useState(emptyPost);
-
-
+    
+    const doNothing = (e) => e.preventDefault();
+    
     const onUpdate = (target, event) => {
         setPost(prev => { 
             return {...prev, [target]: event.target.value}
@@ -21,7 +23,7 @@ export default function PostDetail(props) {
 
     const onPostUpdate = (_) => {
         api.updatePost(post.id, {...post, userId: 4}).then( _ => {
-            props.onPostUpdate();
+            navigate('/posts');
         }).catch(err => {
             console.log(err);
         })
@@ -29,19 +31,19 @@ export default function PostDetail(props) {
 
     const onPostDelete = (_) => {
         api.deletePost(post.id).then( _ => {
-            props.onPostDelete();
+            navigate('/posts');
         }).catch(err => {
             console.log(err);
         })
     }
 
     useEffect(() => {
-        api.getPostById(postId).then(result => {
+        api.getPostById(params.id).then(result => {
             setPost(result.data);
         }).catch( err => {
             console.log(err);
         });
-    }, [postId])
+    }, [params.id])
 
     return(
         <div className="edit_post">

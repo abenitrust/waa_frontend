@@ -1,12 +1,14 @@
-import { PostContext } from "../context/PostContext"
-import { useContext } from "react";
+import { useNavigate } from "react-router-dom"
+
 
 export default function Post(props) {
-
-    const { updatePostId } = useContext(PostContext);
+    const navigate = useNavigate();
+    const editPost = () => {
+        navigate(`/posts/${props.detail.id}`);
+    }
 
     return (
-        <div className="post" onClick={(_) => updatePostId(props.detail.id)}>
+        <div className="post" onClick={editPost}>
             <div>Id: {props.detail.id}</div>
             <div>Title: {props.detail.title}</div>
             <div>Author: {props.detail.author}</div>

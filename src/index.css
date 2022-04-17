@@ -16,13 +16,16 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
   flex-direction: column;
+  margin: 1em;
 }
 
 .dashboard {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .post_list {
@@ -73,4 +76,14 @@ code {
 .add_edit {
   display: flex;
   justify-content: space-between;
+}
+
+nav {
+  margin: 1em;
+}
+
+nav > a {
+  padding : 1em 0.25em;
+  margin : 1em 0.25em;
+  color: rgb(21, 118, 203);
 }

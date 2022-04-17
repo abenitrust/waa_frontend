@@ -3,8 +3,11 @@ const corsInterceptor = (config) => {
     return config;
 }
 
-const authInterceptor = (config) => {
-    config.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY1MjM2NzI5OSwiaWF0IjoxNjQ5ODY3Mjk5fQ.FNgohiGbqY79k-v8e_YWYDXZwq6JzCqnM8T7FVaGugtwPJfioG6H5KpcFW87F3n18i43863pj3tQEvi-u5gm9A'
+const authInterceptor =  (config) => {
+    const token = localStorage.getItem('access_token');
+    if(token !== null) {
+        config.headers.common['Authorization'] = `Bearer ${token}`;
+    }
     return config;
 }
 
